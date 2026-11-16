@@ -1,0 +1,28 @@
+# dependencies and build output
+node_modules/
+.next/
+out/
+build/
+coverage/
+
+# environment files and anything that looks like a secret
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+service-account*.json
+
+# hosting tool folders
+.vercel/
+.netlify/
+
+# logs and editor/OS files
+*.log
+npm-debug.log*
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp

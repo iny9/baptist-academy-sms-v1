@@ -1,0 +1,75 @@
+/* ======================= White-and-blue glass theme =======================
+   Loaded after globals.css, so it only restyles surfaces (it changes no layout and no behaviour).
+   Fast by design: blur is limited to small, fixed-size surfaces; any panel holding a table or a big list gets a solid frosted fill instead of a live blur;
+   everything falls back to plain white when the browser has no backdrop-filter, when the person asks for reduced transparency, and in print. */
+:root{
+  --glass:rgba(255,255,255,.66); --glass-strong:rgba(255,255,255,.86); --glass-line:rgba(255,255,255,.75); --glass-edge:rgba(27,58,122,.14);
+  --glass-shadow:0 10px 34px -14px rgba(27,58,122,.30),0 1px 0 rgba(255,255,255,.8) inset;
+  --blue-1:#2F6BEB; --blue-2:#1B3A7A; --blue-glow:rgba(47,107,235,.22); --blur:14px;
+}
+body{
+  background:
+    radial-gradient(1100px 560px at 8% -8%,#d9e7ff 0%,transparent 62%),
+    radial-gradient(900px 520px at 100% 0%,#e3efff 0%,transparent 58%),
+    radial-gradient(800px 600px at 50% 110%,#eaf2ff 0%,transparent 60%),
+    linear-gradient(180deg,#f7faff,#eef4ff 45%,#f9fbff);
+  background-attachment:fixed;
+}
+/* surfaces */
+.panel,.card,.action,.tabs,.notice,.at-kpi,.at-day,.at-cell,.empty,.gd-glass{
+  background:var(--glass);border:1px solid var(--glass-line);box-shadow:var(--glass-shadow);
+  -webkit-backdrop-filter:blur(var(--blur)) saturate(150%);backdrop-filter:blur(var(--blur)) saturate(150%);
+  border-radius:16px;
+}
+.panel:has(table),.panel:has(.at-bars),.card:has(table){-webkit-backdrop-filter:none;backdrop-filter:none;background:var(--glass-strong)}
+.action,.card{transition:transform .22s ease,box-shadow .22s ease,border-color .22s ease}
+.action:hover,.card:hover{border-color:rgba(47,107,235,.45);box-shadow:0 18px 40px -16px var(--blue-glow),var(--glass-shadow)}
+.tabs{background:rgba(255,255,255,.55)}.tabs a.on{background:linear-gradient(135deg,var(--blue-1),var(--blue-2));color:#fff;box-shadow:0 6px 16px -6px var(--blue-glow)}
+.action .ico{background:linear-gradient(135deg,rgba(47,107,235,.16),rgba(27,58,122,.10));color:var(--blue-2)}
+.badge{backdrop-filter:none}
+/* sidebar: deep blue glass */
+.side{background:linear-gradient(185deg,rgba(14,34,82,.94),rgba(27,58,122,.90));-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px);border-right:1px solid rgba(255,255,255,.14);box-shadow:8px 0 40px -20px rgba(14,34,82,.55)}
+.side a.nav{transition:background .18s ease,transform .18s ease}.side a.nav:hover{transform:translateX(2px)}
+.side a.nav.on{background:linear-gradient(135deg,rgba(255,255,255,.22),rgba(255,255,255,.10));box-shadow:0 6px 18px -8px rgba(0,0,0,.45),0 1px 0 rgba(255,255,255,.25) inset}
+/* buttons and fields */
+.btn{background:linear-gradient(135deg,var(--blue-1),var(--blue-2));box-shadow:0 8px 20px -10px var(--blue-glow);transition:transform .16s ease,box-shadow .16s ease,filter .16s ease}
+.btn:hover{background:linear-gradient(135deg,#3b78f5,#1f4496);box-shadow:0 12px 26px -10px var(--blue-glow);filter:saturate(1.05)}
+.btn.ghost{background:var(--glass-strong);color:var(--ink);border:1px solid var(--glass-edge);box-shadow:none}
+.btn.ghost:hover{background:#fff;border-color:rgba(47,107,235,.4)}
+.btn.danger{background:linear-gradient(135deg,#e5534b,#c0332d)}
+input,select,textarea{background:rgba(255,255,255,.82);border:1px solid var(--glass-edge);border-radius:10px;transition:border-color .16s ease,box-shadow .16s ease}
+input:focus,select:focus,textarea:focus{border-color:var(--blue-1);box-shadow:0 0 0 3px var(--blue-glow);outline:0}
+/* tables stay crisp: no blur, light frosted header */
+table{background:transparent}
+thead th{background:rgba(234,240,251,.85)}
+tbody tr{transition:background .12s ease}tbody tr:hover{background:rgba(47,107,235,.06)}
+/* charts and bars */
+.at-bar i{background:linear-gradient(180deg,#5b8def,var(--blue-2));border-radius:7px 7px 0 0}
+.gd-glass{border-radius:18px}
+/* motion: gentle, and off when asked */
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+/* fallbacks */
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){
+  .panel,.card,.action,.tabs,.notice,.at-kpi,.at-day,.at-cell,.empty,.gd-glass{background:rgba(255,255,255,.94)}
+  .side{background:#0E2252}
+}
+@media (prefers-reduced-transparency:reduce){
+  .panel,.card,.action,.tabs,.notice,.at-kpi,.at-day,.at-cell,.empty,.gd-glass,.side{-webkit-backdrop-filter:none;backdrop-filter:none}
+  .panel,.card,.action,.tabs,.notice,.at-kpi,.at-day,.at-cell,.empty,.gd-glass{background:#fff}
+}
+/* dark theme keeps the same glass, in navy */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme='light']){--glass:rgba(24,37,79,.62);--glass-strong:rgba(17,27,62,.88);--glass-line:rgba(143,168,232,.22);--glass-edge:rgba(143,168,232,.25);--glass-shadow:0 10px 34px -14px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.06) inset}
+  :root:not([data-theme='light']) body{background:radial-gradient(1000px 520px at 8% -8%,#16265a 0%,transparent 62%),radial-gradient(900px 520px at 100% 0%,#13224f 0%,transparent 58%),linear-gradient(180deg,#0A1230,#0c1636)}
+  :root:not([data-theme='light']) input,:root:not([data-theme='light']) select,:root:not([data-theme='light']) textarea{background:rgba(17,27,62,.7)}
+  :root:not([data-theme='light']) thead th{background:rgba(26,39,84,.85)}
+}
+:root[data-theme='dark']{--glass:rgba(24,37,79,.62);--glass-strong:rgba(17,27,62,.88);--glass-line:rgba(143,168,232,.22);--glass-edge:rgba(143,168,232,.25);--glass-shadow:0 10px 34px -14px rgba(0,0,0,.6),0 1px 0 rgba(255,255,255,.06) inset}
+:root[data-theme='dark'] body{background:radial-gradient(1000px 520px at 8% -8%,#16265a 0%,transparent 62%),radial-gradient(900px 520px at 100% 0%,#13224f 0%,transparent 58%),linear-gradient(180deg,#0A1230,#0c1636)}
+:root[data-theme='dark'] input,:root[data-theme='dark'] select,:root[data-theme='dark'] textarea{background:rgba(17,27,62,.7)}
+:root[data-theme='dark'] thead th{background:rgba(26,39,84,.85)}
+/* print: plain paper, no glass, no blur */
+@media print{
+  body{background:#fff!important}
+  .panel,.card,.action,.tabs,.notice,.at-kpi,.at-day,.at-cell,.empty,.gd-glass{background:#fff!important;box-shadow:none!important;-webkit-backdrop-filter:none!important;backdrop-filter:none!important;border-color:#999!important}
+}
